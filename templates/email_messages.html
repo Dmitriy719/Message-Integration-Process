@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список сообщений</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Список сообщений</h1>
+    <div id="progress-bar">
+        <div id="progress" style="width: 0%;"></div>
+        <span id="progress-text">Чтение сообщений...</span>
+    </div>
+    <table id="messages-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Тема</th>
+                <th>Дата отправки</th>
+                <th>Дата получения</th>
+                <th>Описание</th>
+                <th>Прикрепленные файлы</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Данные будут добавлены через JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // WebSocket соединение
+        const socket = new WebSocket('ws://localhost:8000/ws/email/');
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'progress') {
+                $('#progress').css('width', data.progress + '%');
+                $('#progress-text').text(data.message);
+            } else if (data.type === 'message') {
+                $('#messages-table tbody').append(`
+                    <tr>
+                        <td>${data.id}</td>
+                        <td>${data.subject}</td>
+                        <td>${data.sent_date}</td>
+                        <td>${data.received_date}</td>
+                        <td>${data.body.substring(0, 50)}...</td>
+                        <td>${data.attachments.join(', ')}</td>
+                    </tr>
+                `);
+            }
+        };
+    </script>
+</body>
+</html>
