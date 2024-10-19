@@ -17,8 +17,8 @@ class EmailConsumer(AsyncWebsocketConsumer):
         await self.fetch_emails(email_account)
 
     async def fetch_emails(self, email_account):
-        # Здесь должна быть логика для подключения к почте и получения сообщений
-        # Пример: используем asyncio для имитации долгого процесса
+        # Логика для подключения к почте и получения сообщений
+        # Используем asyncio для имитации долгого процесса
         total_messages = 100  # Примерное количество сообщений
         for i in range(total_messages):
             await asyncio.sleep(0.1)  # Имитация задержки
@@ -28,8 +28,7 @@ class EmailConsumer(AsyncWebsocketConsumer):
                 'progress': progress,
                 'message': f'Проверено {i + 1} из {total_messages} сообщений'
             }))
-            # Здесь добавьте логику для получения и сохранения сообщений
-            # Пример:
+            # Логика для получения и сохранения сообщений
             message = EmailMessage(
                 subject=f'Тема {i + 1}',
                 sent_date='2023-01-01 12:00:
